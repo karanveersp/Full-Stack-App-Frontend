@@ -4,9 +4,9 @@ import { RealTimeBookComponent } from "./real-time-book/real-time-book.component
 import { OrderBookSnapshotComponent } from './order-book-snapshot/order-book-snapshot.component';
 
 const routes: Routes = [
-  { path: 'noble-markets-realtime-order-book', component: RealTimeBookComponent },
-  { path: 'noble-markets-order-book-snapshot', component: OrderBookSnapshotComponent},
-  { path: '', redirectTo: '/noble-markets-realtime-order-book', pathMatch: 'full' },
+  { path: 'realtime-order-book', component: RealTimeBookComponent },
+  { path: 'order-book-snapshot', component: OrderBookSnapshotComponent},
+  { path: '', redirectTo: '/realtime-order-book', pathMatch: 'full' },
 ];
 
 @NgModule({
