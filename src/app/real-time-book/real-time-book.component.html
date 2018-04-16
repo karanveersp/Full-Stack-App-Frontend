@@ -3,31 +3,31 @@
 <br>
 
 <table class="table" id="bid_table" border="1">
-  <thead>
-      <tr>
-          <th>Bid (price people are willing to buy at) <br>
-              $Price (Quantity) &lt;Exchange&gt;</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr *ngFor="let row of Object.keys(ob.bids) | paginate: { itemsPerPage: 50, currentPage: p }">
-          <td>{{ ob.bids[row].print() }} </td>
-      </tr>
-  </tbody>
+    <thead>
+        <tr>
+            <th>Bid (price people are willing to buy at)
+                <br> $Price (Quantity) &lt;Exchange&gt;</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let row of Object.keys(ob.bids) | paginate: { itemsPerPage: 50, currentPage: p }">
+            <td>{{ ob.bids[row].print() }} </td>
+        </tr>
+    </tbody>
 </table>
 
 <table class="table" id="ask_table" border="1">
-  <thead>
-      <tr>
-          <th>Ask (price people are willing to sell at) <br>
-              $Price (Quantity) &lt;Exchange&gt;</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr *ngFor="let row of Object.keys(ob.asks) | paginate: { itemsPerPage: 50, currentPage: p }">
-          <td>{{ ob.asks[row].print() }} </td>
-      </tr>
-  </tbody>
+    <thead>
+        <tr>
+            <th>Ask (price people are willing to sell at)
+                <br> $Price (Quantity) &lt;Exchange&gt;</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let row of Object.keys(ob.asks) | paginate: { itemsPerPage: 50, currentPage: p }">
+            <td>{{ ob.asks[row].print() }} </td>
+        </tr>
+    </tbody>
 </table>
 
-<pagination-controls (pageChange)="p = $event"></pagination-controls>
+<pagination-controls class="my-pagination" (pageChange)="p = $event"></pagination-controls>
