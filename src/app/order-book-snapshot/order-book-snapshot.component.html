@@ -5,59 +5,61 @@
 <div>
     <form [formGroup]="rForm" (ngSubmit)="onSubmit(rForm.value)">
         <div class="form-container">
-            <h2 class="h2">Snapshot Preferences</h2>
 
-            <label class="label">Exchange: 
-                Bitfinex
-                <input type="radio" class="radio" value="Bitfinex" name="exchange" formControlName="exchange">
-                &nbsp;&nbsp;
-                Gdax
-                <input type="radio" class="radio" value="Gdax" name="exchange" formControlName="exchange">
-                &nbsp;&nbsp;
-                Both
-                <input type="radio" class="radio" value="Both" name="exchange" formControlName="exchange"> 
-            </label>
+            <label class="label" for="#exchange_radio_group">Exchange</label> &nbsp;
+            <mat-radio-group id="exchange_radio_group" formControlName="exchange">
+                <mat-radio-button value="Bitfinex">Bitfinex</mat-radio-button>
+                <mat-radio-button value="Gdax">Gdax</mat-radio-button>
+                <mat-radio-button value="Both">Both</mat-radio-button>
+            </mat-radio-group>
 
             <br>
 
-            <label class="label">Price greater than
-                <input type="text" formControlName="price_greater_than">
-            </label>
+            <mat-form-field>
+                <input matInput placeholder="Price greater than" formControlName="price_greater_than">
+            </mat-form-field>
 
-            <br><br>
-            <input type="submit" class="button" value="Submit Form" [disabled]="!rForm.valid">
-            <label class="label">{{msg}}</label> 
+            <label class="label">{{msg}}</label>
+
+            <br>
+            <br>
+
+            <button mat-raised-button type="submit" [disabled]="!rForm.valid">Get Snapshot</button>
         </div>
     </form>
 </div>
-<br> <br>
+
+<br>
+<br>
 
 <table class="table table-striped table-condensed" id="bid_table" border="1">
-  <thead>
-      <tr>
-          <th>Bid (price people are willing to buy at) <br>
-              $Price (Quantity) &lt;Exchange&gt;</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr *ngFor="let row of snapshot_bids | paginate: { itemsPerPage: 50, currentPage: p }">
-          <td>{{ row.print() }} </td>
-      </tr>
-  </tbody>
+    <thead>
+        <tr>
+            <th>Bid (price people are willing to buy at)
+                <br> $Price (Quantity) &lt;Exchange&gt;</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr *ngFor="let row of snapshot_bids | paginate: { itemsPerPage: 50, currentPage: p }">
+            <td>{{ row.print() }} </td>
+        </tr>
+    </tbody>
+
 </table>
 
 <table class="table table-striped table-condensed" id="ask_table" border="1">
-  <thead>
-      <tr>
-          <th>Ask (price people are willing to sell at) <br>
-              $Price (Quantity) &lt;Exchange&gt;</th>
-      </tr>
-  </thead>
-  <tbody>
-      <tr *ngFor="let row of snapshot_asks | paginate: { itemsPerPage: 50, currentPage: p }">
-          <td>{{ row.print() }} </td>
-      </tr>
-  </tbody>
+    <thead>
+        <tr>
+            <th>Ask (price people are willing to sell at)
+                <br> $Price (Quantity) &lt;Exchange&gt;</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let row of snapshot_asks | paginate: { itemsPerPage: 50, currentPage: p }">
+            <td>{{ row.print() }} </td>
+        </tr>
+    </tbody>
 </table>
 
-<pagination-controls (pageChange)="p = $event"></pagination-controls>
+<pagination-controls class="my-pagination" (pageChange)="p = $event"></pagination-controls>
