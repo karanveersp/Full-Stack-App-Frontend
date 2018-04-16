@@ -6,7 +6,7 @@ export class WebSocketService {
 
   ws: WebSocket;
 
-  createObservableSocket(url: string) : Observable<string> {
+  createObservableSocket(url: string): Observable<string> {
     this.ws = new WebSocket(url);
     return new Observable(observer => {
       this.ws.onmessage = (event) => observer.next(event.data);
@@ -15,3 +15,4 @@ export class WebSocketService {
     });
   }
 }
+
