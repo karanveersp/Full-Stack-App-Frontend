@@ -15,3 +15,7 @@ table {
 td, th {
     text-align: center;
 }
+
+.my-pagination /deep/ .ngx-pagination .current {
+    float: right;
+}
