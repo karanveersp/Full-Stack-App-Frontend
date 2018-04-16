@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from "@angular/common/http";
-import { BookItem } from '../Book-Item';
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+
+import { SnapshotService } from "../snapshot.service";
+import { BookItem } from '../Book-Item';
 
 @Component({
   selector: 'app-order-book-snapshot',
@@ -10,59 +11,32 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 })
 export class OrderBookSnapshotComponent implements OnInit {
 
+  // Form properties
   rForm: FormGroup;
   post: any;
   msg: string = '';
 
-
+  // Snapshot properties
   snapshot_bids: BookItem[] = [];
   snapshot_asks: BookItem[] = [];
+  snapshot_set: boolean = false;
 
+  columnsToDisplay = ['Price', 'Count', 'Exchange'];
+
+  // Pagination property
   p: number = 1;
 
-  constructor(private http: HttpClient, private fb: FormBuilder) { 
+  constructor(private snap_service: SnapshotService, private fb: FormBuilder) {
     this.rForm = fb.group({
       'exchange': [null, Validators.required],
       'price_greater_than': [null, Validators.required]
     });
   }
 
-  send_get_request(url){
-    this.snapshot_asks = [];
-    this.snapshot_bids = [];
-    this.http.get(url).subscribe(data => {
-      this.createSnapshot(data);
-    }, err => {
-      console.log("Error occurred while getting snapshot");
-    })
-  }
-
-  onSubmit(post) {
-    let exchangeParam = '';
-    let priceParam = '';
-    if (isNaN(post.price_greater_than)) {
-      this.msg = "Price must be a number";
-      this.rForm.reset();
-    }
-    else {
-      if (post.exchange === "Both"){
-        exchangeParam = "";
-      }
-      else {
-        exchangeParam = "&exchange=" + post.exchange;
-      }
-      priceParam = "price_greater_than=" + String(Math.abs(post.price_greater_than));
-
-      let req_url = "http://localhost:5000/snapshot?" + priceParam + exchangeParam;
-      console.log(req_url);
-      this.send_get_request(req_url);
-      this.msg = "";
-    }
-  }
-
   ngOnInit() {
-    this.http.get('http://localhost:5000/snapshot').subscribe(data => {
+    this.snap_service.get_snapshot().subscribe(data => {
       this.createSnapshot(data);
+      this.snapshot_set = true;
     }, err => {
       console.log("Error occurred while getting snapshot");
     })
@@ -78,9 +52,44 @@ export class OrderBookSnapshotComponent implements OnInit {
         this.snapshot_asks.push(book_item);
       }
     });
-
+    // Change detection
     this.snapshot_bids = [...this.snapshot_bids];
     this.snapshot_asks = [...this.snapshot_asks];
   }
 
+  onSubmit(post) {
+    let exchangeParam = post.exchange;
+    if (exchangeParam === "Both") {
+      exchangeParam = "";   // no value retrieves both
+    }
+
+    let priceParam = '';
+
+
+    if (isNaN(post.price_greater_than)) {
+      // Validation for price_greater_than
+      this.msg = "Price must be a number";
+      this.rForm.reset();
+    }
+    else {
+      // Send request to server
+      priceParam = Math.abs(post.price_greater_than).toString();
+
+      this.send_get_request(priceParam, exchangeParam);
+      this.msg = "";
+      this.rForm.reset();
+    }
+  }
+
+  send_get_request(price_greater_than, exchange) {
+    // Form submission get request
+    // Reset the arrays
+    this.snapshot_asks = [];
+    this.snapshot_bids = [];
+    this.snap_service.get_snapshot(price_greater_than, exchange).subscribe(data => {
+      this.createSnapshot(data);
+    }, err => {
+      console.log("Error occurred while getting snapshot");
+    });
+  }
 }
